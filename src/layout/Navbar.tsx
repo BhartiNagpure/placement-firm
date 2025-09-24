@@ -1,101 +1,115 @@
-import React, { useState, useEffect } from 'react';
-import { X, Menu } from 'lucide-react';
-import logo from '../assests/logo.png';
-import { useNavigate } from 'react-router-dom';
 
-function Navbar() {
-    const navigate = useNavigate();
-    const [isMenuOpen, setIsMenuOpen] = useState(false);
-    const [isScrolled, setIsScrolled] = useState(false);
+import { useState, useEffect } from "react";
+import { Menu, X } from "lucide-react";
 
-    useEffect(() => {
-        const handleScroll = () => {
-            setIsScrolled(window.scrollY > 50);
-        };
+const Navbar = () => {
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
 
-        window.addEventListener('scroll', handleScroll);
-        return () => window.removeEventListener('scroll', handleScroll);
-    }, []);
+  // Scroll only affects desktop (lg and above)
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.innerWidth >= 1024) {
+        setIsScrolled(window.scrollY > 50);
+      }
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
+  const navLinks = [
+    { name: "Home", href: "/" },
+    { name: "About", href: "/about" },
+    { name: "Job Fairs", href: "/job-fairs" },
+    { name: "Training", href: "/training" },
+    { name: "Campus Drives", href: "/campus-drives" },
+    { name: "News", href: "/news" },
+    { name: "Contact", href: "/contact" },
+  ];
 
-    return (
-        <div>
-            <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled
-                ? 'bg-white/95 backdrop-blur-md shadow-lg mx-4 mt-4 rounded-2xl'
-                : 'bg-transparent'
-                }`}>
-                <div className={`px-6 ${isScrolled ? 'py-3' : 'py-6'} transition-all duration-300`}>
-                    <div className="flex items-center justify-between">
-                        <div className="flex items-center space-x-2">
-                            <img
-                                src={logo} alt='logo' className="h-12 w-40"
-                            />
-                        </div>
-
-                        {/* Desktop Navigation */}
-                        <div className="hidden md:flex items-center space-x-8">
-                            <button className="text-gray-700 hover: text-[#1F497D] transition-colors">
-                                Home
-                            </button>
-                            <button className="text-gray-700 hover: text-[#1F497D] transition-colors">
-                                About
-                            </button>
-                            <button className="text-gray-700 hover: text-[#1F497D] transition-colors">
-                                Services
-                            </button>
-                            <button className="text-gray-700 hover: text-[#1F497D] transition-colors">
-                                Partners
-                            </button>
-                            <button className="text-gray-700 hover: text-[#1F497D] transition-colors">
-                                Success Stories
-                            </button>
-                            <button
-                                onClick={() => navigate('/contact')}
-                                className=" bg-[#1F497D] text-white px-6 py-2 rounded-full hover:bg-blue-700 transition-colors">
-                                Contact Us
-                            </button>
-                        </div>
-
-                        {/* Mobile menu button */}
-                        <button
-                            onClick={() => setIsMenuOpen(!isMenuOpen)}
-                            className="md:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors"
-                        >
-                            {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-                        </button>
-                    </div>
-
-                    {/* Mobile Navigation */}
-                    {isMenuOpen && (
-                        <div className="md:hidden mt-4 py-4 border-t border-gray-200">
-                            <div className="flex flex-col space-y-4">
-                                <button className="text-gray-700 hover: text-[#1F497D] transition-colors text-left">
-                                    Home
-                                </button>
-                                <button className="text-gray-700 hover: text-[#1F497D] transition-colors text-left">
-                                    About
-                                </button>
-                                <button className="text-gray-700 hover: text-[#1F497D] transition-colors text-left">
-                                    Services
-                                </button>
-                                <button className="text-gray-700 hover: text-[#1F497D] transition-colors text-left">
-                                    Partners
-                                </button>
-                                <button className="text-gray-700 hover: text-[#1F497D] transition-colors text-left">
-                                    Success Stories
-                                </button>
-                                <button
-                                    onClick={() => navigate('/contact')}
-                                    className=" bg-[#1F497D] text-white px-6 py-2 rounded-full hover:bg-blue-700 transition-colors text-left w-fit">
-                                    Contact Us
-                                </button>
-                            </div>
-                        </div>
-                    )}
-                </div>
-            </nav>
+  return (
+    <nav className="fixed top-0 left-0 right-0 z-50">
+      {/* DESKTOP NAVBAR */}
+      <div
+        className={`hidden lg:flex items-center justify-between transition-all duration-500 ${
+          isScrolled
+            ? "max-w-7xl mx-auto mt-2 bg-white rounded-2xl shadow-md py-2 px-6"
+            : "w-full bg-[#1F497D] py-3 px-8"
+        }`}
+      >
+        {/* Logo */}
+        <div
+          className={`text-2xl font-bold transition-colors ${
+            isScrolled ? "text-blue-700" : "text-white"
+          }`}
+        >
+          INFOLINK
         </div>
-    )
-}
 
-export default Navbar
+        {/* Links */}
+        <div className="flex items-center space-x-6">
+          {navLinks.map((link) => (
+            <a
+              key={link.name}
+              href={link.href}
+              className={`transition-colors duration-300 ${
+                isScrolled
+                  ? "text-gray-800 hover:text-blue-600"
+                  : "text-white hover:text-yellow-300"
+              }`}
+            >
+              {link.name}
+            </a>
+          ))}
+          <a
+            href="/join-job-fair"
+            className={`px-4 py-2 rounded-lg font-semibold transition duration-300 ${
+              isScrolled
+                ? "bg-[#1F497D] text-white hover:bg-blue-800"
+                : "bg-yellow-400 text-blue-900 hover:bg-yellow-500"
+            }`}
+          >
+            Join Job Fair
+          </a>
+        </div>
+      </div>
+
+      {/* MOBILE / TABLET NAVBAR */}
+      <div className="flex lg:hidden items-center justify-between bg-[#1F497D] px-4 py-3">
+        <div className="text-2xl font-bold text-white">INFOLINK</div>
+
+        <button
+          onClick={() => setMenuOpen(!menuOpen)}
+          className="text-white focus:outline-none"
+        >
+          {menuOpen ? <X size={28} /> : <Menu size={28} />}
+        </button>
+      </div>
+
+      {/* Mobile Menu */}
+      {menuOpen && (
+        <div className="lg:hidden bg-[#1F497D] px-4 pb-4 space-y-2">
+          {navLinks.map((link) => (
+            <a
+              key={link.name}
+              href={link.href}
+              className="block py-2 border-b border-blue-500 text-white hover:text-yellow-300"
+              onClick={() => setMenuOpen(false)}
+            >
+              {link.name}
+            </a>
+          ))}
+          <a
+            href="/join-job-fair"
+            className="block text-center mt-3 bg-yellow-400 text-blue-900 px-4 py-2 rounded-lg font-semibold hover:bg-yellow-500 transition duration-300"
+            onClick={() => setMenuOpen(false)}
+          >
+            Join Job Fair
+          </a>
+        </div>
+      )}
+    </nav>
+  );
+};
+
+export default Navbar;
